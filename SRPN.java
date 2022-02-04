@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class SRPN {
 
-  // * constructor - executes when SRPN is initialised
+  // * constructor - executes the following steps when SRPN is initialised
   public SRPN () {
     // 1. initialises Views class for dealing with IO
     View view = new View();
@@ -14,18 +14,20 @@ public class SRPN {
     // 2. initialises random number generator from RandomNumClass
     RandomNumGenerator randomNumGenerator = new RandomNumGenerator();
 
+    // 3. initialises utils
     Utils utils = new Utils();
-    // 3. initialises array of arithmetic operations: -, +, ^, %, *, /
+
+    // 4. initialises array of arithmetic operations: -, +, ^, %, *, /
     ArrayList<String> arithmeticOperations = utils.getArithmeticOperations();
 
-    // 4. initialises comment mode
+    // 5. initialises comment mode
     boolean commentMode = utils.getCommentMode();
 
-    // 5. welcomes user
+    // 6. welcomes user
     view.welcomeUser();
   }
 
-  public void processCommand(String s) {
+  public void processCommand(String command) {
 
   }
 
