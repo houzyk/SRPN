@@ -7,8 +7,8 @@ import java.util.ArrayList;
  */
 
 public class Utils {
-  ArrayList<String> arithmeticOperations = new ArrayList<>();
-  boolean commentMode = false; // initially, the calculator is NOT in comment mode
+  private ArrayList<String> arithmeticOperations = new ArrayList<>();
+  private boolean commentMode = false; // initially, the calculator is NOT in comment mode
 
   // * constructor - executes when SRPN constructor is executed
   public Utils () {
