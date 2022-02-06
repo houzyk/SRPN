@@ -1,24 +1,23 @@
 import java.util.Stack;
 
 /**
- * Class for dealing with user input and outputting messages to the user's
- * console. The class has two types of methods - one deals with user output and the treats the user input
+ * Class for dealing with outputting messages to the user's
+ * console. The class has two types of methods - one deals with user output
  * ? @numberStack is the SRPN number stack
  * ? @error is the error message to be printed- stack overflow/underflow, divide by zero, ..
  */
 
-public class View {
-  // ! METHODS DEALING WITH OUTPUT *********************************************
+public abstract class View {
   // welcomes user when SRPN is started
-  public void welcomeUser () {
+  public static void welcomeUser () {
     System.out.println("You can now start interacting with the SRPN calculator");
   }
 
   // prints any error message
-  public void printErrorMessage (String error) { System.err.println(error); }
+  public static void printErrorMessage (String error) { System.err.println(error); }
 
   // prints the top of the SRPN number stack, is triggered with the '=' command
-  public void printNumberStackTop (Stack<Integer> numberStack) {
+  public static void printNumberStackTop (Stack<Integer> numberStack) {
     // checks if stack is empty before printing stack's top value
     if (numberStack.empty()) {
       printErrorMessage("Stack empty.");
@@ -28,7 +27,7 @@ public class View {
   }
 
   // prints the whole SRPN number stack, is triggered with the 'd' command
-  public void printNumberStack(Stack<Integer> numberStack) {
+  public static void printNumberStack(Stack<Integer> numberStack) {
     // checks if stack is empty before printing stack
     if (numberStack.empty()) {
       System.out.println(Integer.MIN_VALUE);
@@ -37,6 +36,4 @@ public class View {
       for (Integer number : numberStack) System.out.println(number.toString());
     }
   }
-
-  // ! METHODS DEALING WITH INPUT **********************************************
 }

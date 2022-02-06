@@ -25,7 +25,8 @@ public class RandomNumGenerator {
 
   // adds 22 random numbers to randomNumbers array
   private void initRandomNumbers() {
-    this.randomNumbers.add(1804289383); // these numbers are obtained from "legacy" SRPN given
+    // these numbers are obtained from "legacy" SRPN given
+    this.randomNumbers.add(1804289383);
     this.randomNumbers.add(846930886);
     this.randomNumbers.add(1681692777);
     this.randomNumbers.add(1714636915);

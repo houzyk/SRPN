@@ -38,4 +38,30 @@ public class Utils {
     this.arithmeticOperations.add("^");
     this.arithmeticOperations.add("%");
   }
+
+  // check for saturation above 2147483647
+  public boolean isPositivelySaturated(long calculation) {
+    return calculation > Integer.MAX_VALUE;
+  }
+
+  // checks for saturation below -2147483647
+  public boolean isNegativelySaturated(long calculation) {
+    return calculation < Integer.MIN_VALUE;
+  }
+
+  public boolean checkUnderFlow (ArrayList<Integer> numberStack) {
+    if (numberStack.size() <= 1) {
+      View.printErrorMessage("Stack underflow.");
+      return false;
+    }
+    return true;
+  }
+
+  public boolean checkOverflow (ArrayList<Integer> numberStack) {
+    if (numberStack.size() >= 23) {
+      View.printErrorMessage("Stack overflow.");
+      return false;
+    }
+    return true;
+  }
 }
