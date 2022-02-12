@@ -83,7 +83,6 @@ public class SRPN {
 
   private void calculate () {
     for (String operation : this.operationQueue) {
-      this.operationQueue.remove();
       if (this.utils.checkUnderFlow(this.numberStack)) {
 
         this.firstOperand = this.numberStack.pop();
@@ -92,62 +91,48 @@ public class SRPN {
         this.secondOperand = this.numberStack.pop();
         long secondOperandCheck = Long.parseLong(this.secondOperand.toString());
 
-        switch (operation) {
-          case "+":
-            Integer additionResult = this.secondOperand + this.firstOperand;
-            long additionResultCheck = secondOperandCheck + firstOperandCheck;
-            executeAfterSaturationCheck(additionResultCheck, additionResult);
-            return;
-
-          case "*":
-            Integer multiplicationResult = this.secondOperand * this.firstOperand;
-            long multiplicationResultCheck = secondOperandCheck * firstOperandCheck;
-            executeAfterSaturationCheck(multiplicationResultCheck, multiplicationResult);
-            return;
-
-          case "-":
-            Integer subtractionResult = this.secondOperand - this.firstOperand;
-            long subtractionResultCheck = secondOperandCheck - firstOperandCheck;
-            executeAfterSaturationCheck(subtractionResultCheck, subtractionResult);
-            return;
-
-          case "/":
-            if (this.firstOperand == 0) {
-              handleOperationError("Divide by zero.");
-            } else {
-              Integer divisionResult = this.secondOperand / this.firstOperand;
-              long divisionResultCheck = secondOperandCheck / firstOperandCheck;
-              executeAfterSaturationCheck(divisionResultCheck, divisionResult);
-            }
-            return;
-
-          case "^":
-            if (this.firstOperand < 0) {
-              handleOperationError("Negative power.");
-            } else {
-              Integer powerResult = (int) Math.pow(this.secondOperand, this.firstOperand);
-              long powerResultCheck = (long) Math.pow(secondOperandCheck, firstOperandCheck);
-              executeAfterSaturationCheck(powerResultCheck, powerResult);
-            }
-            return;
-
-          case "%":
-            if (this.secondOperand == 0) {
-              handleOperationError("Divide by zero.");
-            } else if (this.firstOperand == 0) {
-              throw new RuntimeException();
-            } else {
-              Integer moduloResult = this.secondOperand % this.firstOperand;
-              long moduloResultCheck = secondOperandCheck % firstOperandCheck;
-              executeAfterSaturationCheck(moduloResultCheck, moduloResult);
-            }
-            return;
-
-          default:
-            return;
+        if (operation.equals("+")) {
+          Integer additionResult = this.secondOperand + this.firstOperand;
+          long additionResultCheck = secondOperandCheck + firstOperandCheck;
+          executeAfterSaturationCheck(additionResultCheck, additionResult);
+        } else if (operation.equals("*")) {
+          Integer multiplicationResult = this.secondOperand * this.firstOperand;
+          long multiplicationResultCheck = secondOperandCheck * firstOperandCheck;
+          executeAfterSaturationCheck(multiplicationResultCheck, multiplicationResult);
+        } else if (operation.equals("-")) {
+          Integer subtractionResult = this.secondOperand - this.firstOperand;
+          long subtractionResultCheck = secondOperandCheck - firstOperandCheck;
+          executeAfterSaturationCheck(subtractionResultCheck, subtractionResult);
+        } else if (operation.equals("/")) {
+          if (this.firstOperand == 0) {
+            handleOperationError("Divide by zero.");
+          } else {
+            Integer divisionResult = this.secondOperand / this.firstOperand;
+            long divisionResultCheck = secondOperandCheck / firstOperandCheck;
+            executeAfterSaturationCheck(divisionResultCheck, divisionResult);
+          }
+        } else if (operation.equals("^")) {
+          if (this.firstOperand < 0) {
+            handleOperationError("Negative power.");
+          } else {
+            Integer powerResult = (int) Math.pow(this.secondOperand, this.firstOperand);
+            long powerResultCheck = (long) Math.pow(secondOperandCheck, firstOperandCheck);
+            executeAfterSaturationCheck(powerResultCheck, powerResult);
+          }
+        } else if (operation.equals("%")) {
+          if (this.secondOperand == 0) {
+            handleOperationError("Divide by zero.");
+          } else if (this.firstOperand == 0) {
+            throw new RuntimeException();
+          } else {
+            Integer moduloResult = this.secondOperand % this.firstOperand;
+            long moduloResultCheck = secondOperandCheck % firstOperandCheck;
+            executeAfterSaturationCheck(moduloResultCheck, moduloResult);
+          }
         }
       }
-      }
+    }
+    this.operationQueue.clear();
   }
 
   private void executeAfterSaturationCheck (long check, Integer result) {
