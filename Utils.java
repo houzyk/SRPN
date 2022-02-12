@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Stack;
 
 /**
  * Class for utils and helpers used by the SRPN calculator.
@@ -49,7 +50,7 @@ public class Utils {
     return calculation < Integer.MIN_VALUE;
   }
 
-  public boolean checkUnderFlow (ArrayList<Integer> numberStack) {
+  public boolean checkUnderFlow (Stack<Integer> numberStack) {
     if (numberStack.size() <= 1) {
       View.printErrorMessage("Stack underflow.");
       return false;
@@ -57,7 +58,7 @@ public class Utils {
     return true;
   }
 
-  public boolean checkOverflow (ArrayList<Integer> numberStack) {
+  public boolean checkOverflow (Stack<Integer> numberStack) {
     if (numberStack.size() >= 23) {
       View.printErrorMessage("Stack overflow.");
       return false;

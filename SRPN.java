@@ -11,11 +11,12 @@ public class SRPN {
 
   Stack<Integer> numberStack = new Stack<>(); // numbers to be operated on by operations n operationQueue
   Queue<String> operationQueue = new LinkedList<>(); // operations to be performed on numberStack
-
-  Utils utils;
-  RandomNumGenerator randomNumGenerator;
-  ArrayList<String> arithmeticOperations;
-  boolean commentMode;
+  Integer firstOperand; // stores first operand
+  Integer secondOperand; // stores second operand
+  Utils utils; // instance of utils class
+  RandomNumGenerator randomNumGenerator; // instance of random num generator class
+  ArrayList<String> arithmeticOperations; // array of arithmetic operations
+  boolean commentMode; // stores comment mode
 
   // * constructor - executes the following steps when SRPN is initialised
   public SRPN () {
@@ -47,24 +48,126 @@ public class SRPN {
       } else {
         distributeOperationsAndOperandsCommands(command);
       }
+      calculate();
     }
   }
 
   private void distributeOperationsAndOperandsCommands (String command) {
     if (!this.commentMode && !command.equals("")) {
       if (command.matches("-?[0-9]+")) {
-
+        executeOperandCommand(command);
       } else if (this.arithmeticOperations.contains(command)) {
-
+        executeOperationCommand(command);
       } else if (command.equals("=")) {
         View.printNumberStackTop(this.numberStack);
       } else if (command.equals("d")) {
         View.printNumberStack(this.numberStack);
       } else if (command.equals("r")) {
-
+        executeRandomCommand();
       } else {
-
+        Parser.parseComplexSingleLineCommand(command);
       }
+    }
+  }
+
+  private void executeOperandCommand (String operand) {
+    if (this.utils.checkOverflow(this.numberStack)) {
+      this.numberStack.add(Integer.parseInt(operand));
+    }
+  }
+
+  private void executeOperationCommand (String operator) {
+    this.operationQueue.add(operator);
+  }
+
+  private void executeRandomCommand () {
+    if (this.utils.checkOverflow(this.numberStack)) {
+      this.numberStack.add(this.randomNumGenerator.generateRandomNumber());
+    }
+  }
+
+  private void calculate () {
+    for (String operation : this.operationQueue) {
+      this.operationQueue.remove();
+      if (this.utils.checkUnderFlow(this.numberStack)) {
+
+        this.firstOperand = this.numberStack.pop();
+        long firstOperandCheck = Long.parseLong(this.firstOperand.toString());
+
+        this.secondOperand = this.numberStack.pop();
+        long secondOperandCheck = Long.parseLong(this.secondOperand.toString());
+
+        switch (operation) {
+          case "+":
+            Integer additionResult = this.secondOperand + this.firstOperand;
+            long additionResultCheck = secondOperandCheck + firstOperandCheck;
+            executeAfterSaturationCheck(additionResultCheck, additionResult);
+            return;
+
+          case "*":
+            Integer multiplicationResult = this.secondOperand * this.firstOperand;
+            long multiplicationResultCheck = secondOperandCheck * firstOperandCheck;
+            executeAfterSaturationCheck(multiplicationResultCheck, multiplicationResult);
+            return;
+
+          case "-":
+            Integer subtractionResult = this.secondOperand - this.firstOperand;
+            long subtractionResultCheck = secondOperandCheck - firstOperandCheck;
+            executeAfterSaturationCheck(subtractionResultCheck, subtractionResult);
+            return;
+
+          case "/":
+            if (this.firstOperand == 0) {
+              this.numberStack.push(this.secondOperand);
+              this.numberStack.push(this.firstOperand);
+              View.printErrorMessage("Divide by zero.");
+            } else {
+              Integer divisionResult = this.secondOperand / this.firstOperand;
+              long divisionResultCheck = secondOperandCheck / firstOperandCheck;
+              executeAfterSaturationCheck(divisionResultCheck, divisionResult);
+            }
+            return;
+
+          case "^":
+            if (this.firstOperand < 0) {
+              this.numberStack.push(this.secondOperand);
+              this.numberStack.push(this.firstOperand);
+              View.printErrorMessage("Negative power.");
+            } else {
+              Integer powerResult = (int) Math.pow(this.secondOperand, this.firstOperand);
+              long powerResultCheck = (long) Math.pow(secondOperandCheck, firstOperandCheck);
+              executeAfterSaturationCheck(powerResultCheck, powerResult);
+            }
+            return;
+
+          case "%":
+            if (this.secondOperand == 0) {
+              this.numberStack.push(this.secondOperand);
+              this.numberStack.push(this.firstOperand);
+              View.printErrorMessage("Divide by zero.");
+            } else if (this.firstOperand == 0) {
+              throw new RuntimeException();
+            } else {
+              Integer moduloResult = this.secondOperand % this.firstOperand;
+              long moduloResultCheck = secondOperandCheck % firstOperandCheck;
+              executeAfterSaturationCheck(moduloResultCheck, moduloResult);
+            }
+            return;
+
+          default:
+            return;
+        }
+      }
+      }
+  }
+
+  private void executeAfterSaturationCheck (long check, Integer result) {
+    if (utils.isPositivelySaturated(check)) {
+      this.numberStack.push(Integer.MAX_VALUE);
+    } else if (utils.isNegativelySaturated(check)) {
+      this.numberStack.push(Integer.MIN_VALUE);
+    } else {
+      this.numberStack.push(result);
     }
   }
 }
