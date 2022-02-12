@@ -33,7 +33,7 @@ public class SRPN {
   }
 
   public void processCommand(String command) {
-    String[] parsedCommands = Parser.parseCommandForSpaces(command);
+    String[] parsedCommands = Parser.parseCommand(command);
     distributeCommandsForExecution (parsedCommands);
   }
 
@@ -44,8 +44,8 @@ public class SRPN {
       } else {
         distributeOperationsAndOperandsCommands(command);
       }
-      calculate();
     }
+    calculate();
   }
 
   private void distributeOperationsAndOperandsCommands (String command) {
