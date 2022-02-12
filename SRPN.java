@@ -16,7 +16,6 @@ public class SRPN {
   Utils utils; // instance of utils class
   RandomNumGenerator randomNumGenerator; // instance of random num generator class
   ArrayList<String> arithmeticOperations; // array of arithmetic operations
-  boolean commentMode; // stores comment mode
 
   // * constructor - executes the following steps when SRPN is initialised
   public SRPN () {
@@ -29,10 +28,7 @@ public class SRPN {
     // 3. initialises array of arithmetic operations: -, +, ^, %, *, /
     this.arithmeticOperations = utils.getArithmeticOperations();
 
-    // 4. initialises comment mode
-    this.commentMode = this.utils.getCommentMode();
-
-    // 5. welcomes user
+    // 4. welcomes user
     View.welcomeUser();
   }
 
@@ -53,7 +49,7 @@ public class SRPN {
   }
 
   private void distributeOperationsAndOperandsCommands (String command) {
-    if (!this.commentMode && !command.equals("")) {
+    if (!this.utils.getCommentMode() && !command.equals("")) {
       if (command.matches("-?[0-9]+")) {
         executeOperandCommand(command);
       } else if (this.arithmeticOperations.contains(command)) {
@@ -65,7 +61,7 @@ public class SRPN {
       } else if (command.equals("r")) {
         executeRandomCommand();
       } else {
-        Parser.parseComplexSingleLineCommand(command);
+        View.printErrorMessage("Unrecognised operator or operand " + '"' + command + '"' + ".");
       }
     }
   }
@@ -118,9 +114,7 @@ public class SRPN {
 
           case "/":
             if (this.firstOperand == 0) {
-              this.numberStack.push(this.secondOperand);
-              this.numberStack.push(this.firstOperand);
-              View.printErrorMessage("Divide by zero.");
+              handleOperationError("Divide by zero.");
             } else {
               Integer divisionResult = this.secondOperand / this.firstOperand;
               long divisionResultCheck = secondOperandCheck / firstOperandCheck;
@@ -130,9 +124,7 @@ public class SRPN {
 
           case "^":
             if (this.firstOperand < 0) {
-              this.numberStack.push(this.secondOperand);
-              this.numberStack.push(this.firstOperand);
-              View.printErrorMessage("Negative power.");
+              handleOperationError("Negative power.");
             } else {
               Integer powerResult = (int) Math.pow(this.secondOperand, this.firstOperand);
               long powerResultCheck = (long) Math.pow(secondOperandCheck, firstOperandCheck);
@@ -142,9 +134,7 @@ public class SRPN {
 
           case "%":
             if (this.secondOperand == 0) {
-              this.numberStack.push(this.secondOperand);
-              this.numberStack.push(this.firstOperand);
-              View.printErrorMessage("Divide by zero.");
+              handleOperationError("Divide by zero.");
             } else if (this.firstOperand == 0) {
               throw new RuntimeException();
             } else {
@@ -169,5 +159,11 @@ public class SRPN {
     } else {
       this.numberStack.push(result);
     }
+  }
+
+  private void handleOperationError (String errorMessage) {
+    this.numberStack.push(this.secondOperand);
+    this.numberStack.push(this.firstOperand);
+    View.printErrorMessage(errorMessage);
   }
 }
