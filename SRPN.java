@@ -60,7 +60,7 @@ public class SRPN {
       } else if (command.equals("r")) {
         executeRandomCommand();
       } else {
-        View.printErrorMessage("Unrecognised operator or operand " + '"' + command + '"' + ".");
+        View.printErrorMessage("Unrecognised operator or operand \"" + command + "\".");
       }
     }
   }
