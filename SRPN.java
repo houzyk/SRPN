@@ -13,23 +13,20 @@ public class SRPN {
   Queue<String> operationQueue = new LinkedList<>(); // operations to be performed on numberStack
   Integer firstOperand; // stores first operand
   Integer secondOperand; // stores second operand
-  Utils utils; // instance of utils class
-  RandomNumGenerator randomNumGenerator; // instance of random num generator class
-  ArrayList<String> arithmeticOperations; // array of arithmetic operations
+
+
+  // instance of utils class. initialises utils
+  Utils utils = new Utils();
+
+  // instance of random num generator class. initialises random number generator from RandomNumClass
+  RandomNumGenerator randomNumGenerator = new RandomNumGenerator();
+
+  // initialises array of arithmetic operations:-,+,^,%,*,/. array of arithmetic operations
+  ArrayList<String> arithmeticOperations = utils.getArithmeticOperations();
 
   // * constructor - executes the following steps when SRPN is initialised
   public SRPN () {
-    // 1. initialises random number generator from RandomNumClass
-    this.randomNumGenerator = new RandomNumGenerator();
-
-    // 2. initialises utils
-    this.utils = new Utils();
-
-    // 3. initialises array of arithmetic operations: -, +, ^, %, *, /
-    this.arithmeticOperations = utils.getArithmeticOperations();
-
-    // 4. welcomes user
-    View.welcomeUser();
+    View.welcomeUser(); // welcomes user
   }
 
   public void processCommand(String command) {
@@ -39,17 +36,19 @@ public class SRPN {
 
   private void distributeCommandsForExecution  (String[] parsedCommands) {
     for (String command : parsedCommands) {
-      if (command.equals("#")) {
-        this.utils.setCommentMode();
-      } else {
-        distributeOperationsAndOperandsCommands(command);
+      if (!command.equals("")) {
+        if (command.equals("#")) {
+          this.utils.setCommentMode();
+        } else {
+          distributeOperationsAndOperandsCommands(command);
+        }
       }
     }
     calculate();
   }
 
   private void distributeOperationsAndOperandsCommands (String command) {
-    if (!this.utils.getCommentMode() && !command.equals("")) {
+    if (!this.utils.getCommentMode()) {
       if (command.matches("-?[0-9]+")) {
         executeOperandCommand(command);
       } else if (this.arithmeticOperations.contains(command)) {
