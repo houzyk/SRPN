@@ -11,7 +11,6 @@ public class SRPN {
 
   Stack<Integer> numberStack = new Stack<>(); // stores numbers to be operated on by operations n operationQueue
   Queue<String> operationQueue = new LinkedList<>(); // stores operations to be performed on numberStack
-  Queue<String> displayCommandsQueue = new LinkedList<>(); // stores operations to be performed when 'd' is inserted
   Integer firstOperand; // stores first operand
   Integer secondOperand; // stores second operand
 
@@ -48,8 +47,7 @@ public class SRPN {
         }
       }
     }
-    calculate(); // carries all calculation
-    executeDisplayCommands(); // displays the stack AFTER calculations have been processed
+    calculate(); // carries calculation after numberStack and operationQueue have been filled
   }
 
   private void distributeOperationsAndOperandsCommands (String command) {
@@ -63,7 +61,8 @@ public class SRPN {
     String[] parsedCommands = Parser.parseComplexSingleLineCommand(complexCommand);
     for (String parsedCommand : parsedCommands) {
       if (!parsedCommand.equals("") && !handleCommandFlow(parsedCommand)) {
-        View.printErrorMessage("Unrecognised operator or operand \"" + parsedCommand + "\".");
+        String errorMessage = "Unrecognised operator or operand \"" + parsedCommand + "\".";
+        View.printErrorMessage(errorMessage);
       }
     }
   }
@@ -80,7 +79,7 @@ public class SRPN {
       View.printNumberStackTop(this.numberStack);
       return true;
     } else if (command.equals("d")) {
-      this.displayCommandsQueue.add(command);
+      View.printNumberStack(this.numberStack);
       return true;
     } else if (command.equals("r")) {
       executeRandomCommand();
@@ -96,7 +95,7 @@ public class SRPN {
     }
   }
 
-  // adds an arithmetic operation to the operation's queue to be executed at the end of every command line once calulcate() is called
+  // adds an arithmetic operation to the operation's queue to be executed at the end of every command line once calculate() is called
   private void executeOperationCommand (String operator) {
     this.operationQueue.add(operator);
   }
@@ -106,14 +105,6 @@ public class SRPN {
     if (this.utils.checkOverflow(this.numberStack)) {
       this.numberStack.add(this.randomNumGenerator.generateRandomNumber());
     }
-  }
-
-  // iterates through the number of display commands in the display commands queue and execute the display command accordingly
-  private void executeDisplayCommands () {
-    for (String command : this.displayCommandsQueue) {
-      if (command.equals("d")) View.printNumberStack(this.numberStack);
-    }
-    this.displayCommandsQueue.clear(); // empties display command queue after iteration
   }
 
   private void calculate () {
