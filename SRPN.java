@@ -84,22 +84,26 @@ public class SRPN {
     return false;
   }
 
+  // pushes an operand in the number stack if the stack has space, i.e, if the stack if not overflowing
   private void executeOperandCommand (String operand) {
     if (this.utils.checkOverflow(this.numberStack)) {
       this.numberStack.add(Integer.parseInt(operand));
     }
   }
 
+  // adds an arithmetic operation to the operation's queue to be executed at the end of every command line once calulcate() is called
   private void executeOperationCommand (String operator) {
     this.operationQueue.add(operator);
   }
 
+  // pushes a random number on the number stack if the stack has space
   private void executeRandomCommand () {
     if (this.utils.checkOverflow(this.numberStack)) {
       this.numberStack.add(this.randomNumGenerator.generateRandomNumber());
     }
   }
 
+  // iterates through the number of display commands in the display commands queue and execute the display command accordingly
   private void executeDisplayCommands () {
     for (String command : this.displayCommandsQueue) {
       if (command.equals("d")) View.printNumberStack(this.numberStack);
@@ -161,19 +165,22 @@ public class SRPN {
     this.operationQueue.clear();
   }
 
+  // checks for saturation and executes stack push depending on saturation
   private void executeAfterSaturationCheck (long testResult, Integer actualResult) {
     if (utils.isPositivelySaturated(testResult)) {
-      this.numberStack.push(Integer.MAX_VALUE);
+      this.numberStack.push(Integer.MAX_VALUE); // pushes biggest value integer
     } else if (utils.isNegativelySaturated(testResult)) {
-      this.numberStack.push(Integer.MIN_VALUE);
+      this.numberStack.push(Integer.MIN_VALUE); // pushes lowest integer value
     } else {
-      this.numberStack.push(actualResult);
+      this.numberStack.push(actualResult); // pushes result if not saturated
     }
   }
 
+  // executes when an operation error check is invalid. for example, if a division by zero occurs
   private void handleOperationError (String errorMessage) {
+    // pushes the popped numbers from the number stack back into place
     this.numberStack.push(this.secondOperand);
     this.numberStack.push(this.firstOperand);
-    View.printErrorMessage(errorMessage);
+    View.printErrorMessage(errorMessage); // displays message depending on the operation error
   }
 }
