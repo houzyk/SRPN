@@ -43,27 +43,28 @@ public class SRPN {
         if (command.equals("#")) {
           this.utils.setCommentMode(); // toggles comment mode on
         } else {
-          distributeOperationsAndOperandsCommands(command);
+          distributeOperationsAndOperandsCommands(command, parsedCommands);
         }
       }
+      calculate(); // carries calculation after numberStack and operationQueue have been filled
     }
-    calculate(); // carries calculation after numberStack and operationQueue have been filled
   }
 
-  private void distributeOperationsAndOperandsCommands (String command) {
+  private void distributeOperationsAndOperandsCommands (String command, String[] parsedCommands) {
     // does not execute if comment mode is on
     if (!this.utils.getCommentMode() && !handleCommandFlow(command)) {
-      handleComplexCommands(command); // handles complex commands such as 1+1+1, these are commands that do not have spaces between them
+      handleComplexCommands(command, parsedCommands); // handles complex commands such as 1+1+1, these are commands that do not have spaces between them
     }
   }
 
-  private void handleComplexCommands (String complexCommand) {
+  private void handleComplexCommands (String complexCommand, String[] initialCommands) {
     String[] parsedCommands = Parser.parseComplexSingleLineCommand(complexCommand);
     for (String parsedCommand : parsedCommands) {
       if (!parsedCommand.equals("") && !handleCommandFlow(parsedCommand)) {
         String errorMessage = "Unrecognised operator or operand \"" + parsedCommand + "\".";
         View.printErrorMessage(errorMessage);
       }
+      if (initialCommands.length <= 1) calculate();
     }
   }
 
