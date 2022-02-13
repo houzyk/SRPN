@@ -4,7 +4,7 @@ import java.util.Queue;
 import java.util.LinkedList;
 
 /**
- * Class for an SRPN calculator.
+ * Class for an SRPN calculator. Contains calculation logic
  */
 
 public class SRPN {
@@ -43,6 +43,7 @@ public class SRPN {
         if (command.equals("#")) {
           this.utils.setCommentMode(); // toggles comment mode on
         } else {
+          // does not occur if comment mode is on
           distributeOperationsAndOperandsCommands(command, parsedCommands);
         }
       }
@@ -52,6 +53,7 @@ public class SRPN {
 
   private void distributeOperationsAndOperandsCommands (String command, String[] parsedCommands) {
     // does not execute if comment mode is on
+    // checks if comanand is a legal one and carries its flow exist
     if (!this.utils.getCommentMode() && !handleCommandFlow(command)) {
       handleComplexCommands(command, parsedCommands); // handles complex commands such as 1+1+1, these are commands that do not have spaces between them
     }
@@ -60,6 +62,7 @@ public class SRPN {
   private void handleComplexCommands (String complexCommand, String[] initialCommands) {
     String[] parsedCommands = Parser.parseComplexSingleLineCommand(complexCommand);
     for (String parsedCommand : parsedCommands) {
+      // checks if comanand is a legal one and carries its flow exist and if command is not empty
       if (!parsedCommand.equals("") && !handleCommandFlow(parsedCommand)) {
         // builds the error message depending on the wrongfully inserted character
         String errorMessage = "Unrecognised operator or operand \"" + parsedCommand + "\".";
