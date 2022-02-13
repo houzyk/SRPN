@@ -135,7 +135,7 @@ public class SRPN {
           executeAfterSaturationCheck(subtractionTestResult, subtractionResult);
         } else if (operation.equals("/")) {
           if (this.firstOperand == 0) {
-            handleOperationError("Divide by zero.");
+            handleOperationError("Divide by 0.");
           } else {
             Integer divisionResult = this.secondOperand / this.firstOperand;
             long divisionTestResult = secondOperTest / firstOperandTest;
@@ -151,7 +151,7 @@ public class SRPN {
           }
         } else if (operation.equals("%")) {
           if (this.secondOperand == 0) {
-            handleOperationError("Divide by zero.");
+            handleOperationError("Divide by 0.");
           } else if (this.firstOperand == 0) {
             throw new RuntimeException();
           } else {
