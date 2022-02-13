@@ -61,15 +61,17 @@ public class SRPN {
     String[] parsedCommands = Parser.parseComplexSingleLineCommand(complexCommand);
     for (String parsedCommand : parsedCommands) {
       if (!parsedCommand.equals("") && !handleCommandFlow(parsedCommand)) {
+        // builds the error message depending on the wrongfully inserted character
         String errorMessage = "Unrecognised operator or operand \"" + parsedCommand + "\".";
         View.printErrorMessage(errorMessage);
       }
-      if (initialCommands.length <= 1) calculate();
+      if (initialCommands.length <= 1) calculate(); // calculation is carried only for complex commands that occur in a single command line input
     }
   }
 
   // returns true if the command is a legal one and false if it is not recognised such as if 'q' is inserted
   private boolean handleCommandFlow (String command) {
+    // carries an SRPN function depending on the command inserted
     if (command.matches("-?[0-9]+")) {
       executeOperandCommand(command);
       return true;
@@ -108,52 +110,70 @@ public class SRPN {
     }
   }
 
+  // iterates through all available operations and carries each operation on the number stack
   private void calculate () {
     for (String operation : this.operationQueue) {
+      // makes sure that there is enough numbers in the number stack
       if (this.utils.checkUnderFlow(this.numberStack)) {
 
+        // pops away two operands to carry any operation
         this.firstOperand = this.numberStack.pop();
         this.secondOperand = this.numberStack.pop();
 
+        // converts each operand into a long to allow for saturation check
         long firstOperandTest = Long.parseLong(this.firstOperand.toString());
         long secondOperTest = Long.parseLong(this.secondOperand.toString());
 
         if (operation.equals("+")) {
+          // carries the + operation twice, the one of type Integer is the actual result to be displayed. the other of type Long is to check for saturation
           Integer additionResult = this.secondOperand + this.firstOperand;
           long additionTestResult = secondOperTest + firstOperandTest;
+          // carries a saturation check
           executeAfterSaturationCheck(additionTestResult, additionResult);
         } else if (operation.equals("*")) {
+          // carries the * operation twice, the one of type Integer is the actual result
+          // to be displayed. the other of type Long is to check for saturation
           Integer multiplicationResult = this.secondOperand * this.firstOperand;
           long multiplicationTestResult = secondOperTest * firstOperandTest;
+          // carries a saturation check
           executeAfterSaturationCheck(multiplicationTestResult, multiplicationResult);
         } else if (operation.equals("-")) {
+          // carries the - operation twice, the one of type Integer is the actual result
+          // to be displayed. the other of type Long is to check for saturation
           Integer subtractionResult = this.secondOperand - this.firstOperand;
           long subtractionTestResult = secondOperTest - firstOperandTest;
+          // carries a saturation check
           executeAfterSaturationCheck(subtractionTestResult, subtractionResult);
         } else if (operation.equals("/")) {
+          // checks if a division by zero is happening and gives the user an error
           if (this.firstOperand == 0) {
             handleOperationError("Divide by 0.");
           } else {
             Integer divisionResult = this.secondOperand / this.firstOperand;
             long divisionTestResult = secondOperTest / firstOperandTest;
+            // carries a saturation check
             executeAfterSaturationCheck(divisionTestResult, divisionResult);
           }
         } else if (operation.equals("^")) {
+          // checks if a number is raised to a negative power and prints an error to the user
           if (this.firstOperand < 0) {
             handleOperationError("Negative power.");
           } else {
             Integer powerResult = (int) Math.pow(this.secondOperand, this.firstOperand);
             long powerTestResult = (long) Math.pow(secondOperTest, firstOperandTest);
+            // carries a saturation check
             executeAfterSaturationCheck(powerTestResult, powerResult);
           }
         } else if (operation.equals("%")) {
+          // checks if a division by zero is happening and gives the user an error
           if (this.secondOperand == 0) {
             handleOperationError("Divide by 0.");
           } else if (this.firstOperand == 0) {
-            throw new RuntimeException();
+            throw new RuntimeException(); // throws an error as per legacy calculator
           } else {
             Integer moduloResult = this.secondOperand % this.firstOperand;
             long moduloTestResult = secondOperTest % firstOperandTest;
+            // carries a saturation check
             executeAfterSaturationCheck(moduloTestResult, moduloResult);
           }
         }
