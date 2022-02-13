@@ -3,8 +3,6 @@ import java.util.Stack;
 /**
  * Class for dealing with outputting messages to the user's
  * console. The class has two types of methods - one deals with user output
- * ? @numberStack is the SRPN number stack
- * ? @error is the error message to be printed- stack overflow/underflow, divide by zero, ..
  */
 
 public abstract class View {
@@ -14,9 +12,11 @@ public abstract class View {
   }
 
   // prints any error message
+  // error is the error message to be printed- stack overflow/underflow, divide by zero, ..
   public static void printErrorMessage (String error) { System.err.println(error); }
 
   // prints the top of the SRPN number stack, is triggered with the '=' command
+  // numberStack is the SRPN number stack
   public static void printNumberStackTop (Stack<Integer> numberStack) {
     // checks if stack is empty before printing stack's top value
     if (numberStack.empty()) {

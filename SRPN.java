@@ -9,9 +9,9 @@ import java.util.LinkedList;
 
 public class SRPN {
 
-  Stack<Integer> numberStack = new Stack<>(); // numbers to be operated on by operations n operationQueue
-  Queue<String> operationQueue = new LinkedList<>(); // operations to be performed on numberStack
-  Queue<String> displayCommandsQueue = new LinkedList<>(); // operations to be performed on numberStack
+  Stack<Integer> numberStack = new Stack<>(); // stores numbers to be operated on by operations n operationQueue
+  Queue<String> operationQueue = new LinkedList<>(); // stores operations to be performed on numberStack
+  Queue<String> displayCommandsQueue = new LinkedList<>(); // stores operations to be performed when 'd' is inserted
   Integer firstOperand; // stores first operand
   Integer secondOperand; // stores second operand
 
@@ -31,27 +31,31 @@ public class SRPN {
   }
 
   public void processCommand(String command) {
+    // parses the input for spaces and puts each command into an array
     String[] parsedCommands = Parser.parseCommandForSpaces(command);
+    // takes the array of parsedCommands and tries to execute each command
     distributeCommandsForExecution (parsedCommands);
   }
 
   private void distributeCommandsForExecution  (String[] parsedCommands) {
     for (String command : parsedCommands) {
+      // doesn't do anything if there's an empty command
       if (!command.equals("")) {
         if (command.equals("#")) {
-          this.utils.setCommentMode();
+          this.utils.setCommentMode(); // toggles comment mode on
         } else {
           distributeOperationsAndOperandsCommands(command);
         }
       }
     }
-    calculate();
-    executeDisplayCommands();
+    calculate(); // carries all calculation
+    executeDisplayCommands(); // displays the stack AFTER calculations have been processed
   }
 
   private void distributeOperationsAndOperandsCommands (String command) {
+    // does not execute if comment mode is on
     if (!this.utils.getCommentMode() && !handleCommandFlow(command)) {
-      handleComplexCommands(command);
+      handleComplexCommands(command); // handles complex commands such as 1+1+1, these are commands that do not have spaces between them
     }
   }
 
@@ -64,6 +68,7 @@ public class SRPN {
     }
   }
 
+  // returns true if the command is a legal one and false if it is not recognised such as if 'q' is inserted
   private boolean handleCommandFlow (String command) {
     if (command.matches("-?[0-9]+")) {
       executeOperandCommand(command);
@@ -108,7 +113,7 @@ public class SRPN {
     for (String command : this.displayCommandsQueue) {
       if (command.equals("d")) View.printNumberStack(this.numberStack);
     }
-    this.displayCommandsQueue.clear();
+    this.displayCommandsQueue.clear(); // empties display command queue after iteration
   }
 
   private void calculate () {
@@ -162,7 +167,7 @@ public class SRPN {
         }
       }
     }
-    this.operationQueue.clear();
+    this.operationQueue.clear(); // empties operations queue after iteration
   }
 
   // checks for saturation and executes stack push depending on saturation

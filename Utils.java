@@ -3,12 +3,12 @@ import java.util.Stack;
 
 /**
  * Class for utils and helpers used by the SRPN calculator.
- * ? @arithmeticOperations is an array of all SRPN arithmetic operations
- * ? @commentMode is stores whether a comment is present, true upon '#' command
  */
 
 public class Utils {
+  // arithmeticOperations is an array of all SRPN arithmetic operations
   private ArrayList<String> arithmeticOperations = new ArrayList<>();
+  // commentMode stores whether a comment is present, true upon '#' command
   private boolean commentMode = false; // initially, the calculator is NOT in comment mode
 
   // * constructor - executes when SRPN constructor is executed
@@ -50,6 +50,7 @@ public class Utils {
     return calculation < Integer.MIN_VALUE;
   }
 
+  // checks if the stack contains too little numbers
   public boolean checkUnderFlow (Stack<Integer> numberStack) {
     if (numberStack.size() <= 1) {
       View.printErrorMessage("Stack underflow.");
@@ -58,6 +59,7 @@ public class Utils {
     return true;
   }
 
+  // checks if the stack contains too many numbers
   public boolean checkOverflow (Stack<Integer> numberStack) {
     if (numberStack.size() >= 23) {
       View.printErrorMessage("Stack overflow.");
