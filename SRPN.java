@@ -44,12 +44,14 @@ public class SRPN {
         }
       }
     }
-    calculate();
+    // calculate();
   }
 
   private void distributeOperationsAndOperandsCommands (String command) {
     if (!this.utils.getCommentMode() && !handleCommandFlow(command)) {
       handleComplexCommands(command);
+    } else {
+      calculate();
     }
   }
 
@@ -58,6 +60,8 @@ public class SRPN {
     for (String parsedCommand : parsedCommands) {
       if (!parsedCommand.equals("") && !handleCommandFlow(parsedCommand)) {
         View.printErrorMessage("Unrecognised operator or operand \"" + parsedCommand + "\".");
+      } else {
+        calculate();
       }
     }
   }
@@ -103,38 +107,38 @@ public class SRPN {
       if (this.utils.checkUnderFlow(this.numberStack)) {
 
         this.firstOperand = this.numberStack.pop();
-        long firstOperandCheck = Long.parseLong(this.firstOperand.toString());
-
         this.secondOperand = this.numberStack.pop();
-        long secondOperandCheck = Long.parseLong(this.secondOperand.toString());
+
+        long firstOperandTest = Long.parseLong(this.firstOperand.toString());
+        long secondOperTest = Long.parseLong(this.secondOperand.toString());
 
         if (operation.equals("+")) {
           Integer additionResult = this.secondOperand + this.firstOperand;
-          long additionResultCheck = secondOperandCheck + firstOperandCheck;
-          executeAfterSaturationCheck(additionResultCheck, additionResult);
+          long additionTestResult = secondOperTest + firstOperandTest;
+          executeAfterSaturationCheck(additionTestResult, additionResult);
         } else if (operation.equals("*")) {
           Integer multiplicationResult = this.secondOperand * this.firstOperand;
-          long multiplicationResultCheck = secondOperandCheck * firstOperandCheck;
-          executeAfterSaturationCheck(multiplicationResultCheck, multiplicationResult);
+          long multiplicationTestResult = secondOperTest * firstOperandTest;
+          executeAfterSaturationCheck(multiplicationTestResult, multiplicationResult);
         } else if (operation.equals("-")) {
           Integer subtractionResult = this.secondOperand - this.firstOperand;
-          long subtractionResultCheck = secondOperandCheck - firstOperandCheck;
-          executeAfterSaturationCheck(subtractionResultCheck, subtractionResult);
+          long subtractionTestResult = secondOperTest - firstOperandTest;
+          executeAfterSaturationCheck(subtractionTestResult, subtractionResult);
         } else if (operation.equals("/")) {
           if (this.firstOperand == 0) {
             handleOperationError("Divide by zero.");
           } else {
             Integer divisionResult = this.secondOperand / this.firstOperand;
-            long divisionResultCheck = secondOperandCheck / firstOperandCheck;
-            executeAfterSaturationCheck(divisionResultCheck, divisionResult);
+            long divisionTestResult = secondOperTest / firstOperandTest;
+            executeAfterSaturationCheck(divisionTestResult, divisionResult);
           }
         } else if (operation.equals("^")) {
           if (this.firstOperand < 0) {
             handleOperationError("Negative power.");
           } else {
             Integer powerResult = (int) Math.pow(this.secondOperand, this.firstOperand);
-            long powerResultCheck = (long) Math.pow(secondOperandCheck, firstOperandCheck);
-            executeAfterSaturationCheck(powerResultCheck, powerResult);
+            long powerTestResult = (long) Math.pow(secondOperTest, firstOperandTest);
+            executeAfterSaturationCheck(powerTestResult, powerResult);
           }
         } else if (operation.equals("%")) {
           if (this.secondOperand == 0) {
@@ -143,8 +147,8 @@ public class SRPN {
             throw new RuntimeException();
           } else {
             Integer moduloResult = this.secondOperand % this.firstOperand;
-            long moduloResultCheck = secondOperandCheck % firstOperandCheck;
-            executeAfterSaturationCheck(moduloResultCheck, moduloResult);
+            long moduloTestResult = secondOperTest % firstOperandTest;
+            executeAfterSaturationCheck(moduloTestResult, moduloResult);
           }
         }
       }
@@ -152,13 +156,13 @@ public class SRPN {
     this.operationQueue.clear();
   }
 
-  private void executeAfterSaturationCheck (long check, Integer result) {
-    if (utils.isPositivelySaturated(check)) {
+  private void executeAfterSaturationCheck (long testResult, Integer actualResult) {
+    if (utils.isPositivelySaturated(testResult)) {
       this.numberStack.push(Integer.MAX_VALUE);
-    } else if (utils.isNegativelySaturated(check)) {
+    } else if (utils.isNegativelySaturated(testResult)) {
       this.numberStack.push(Integer.MIN_VALUE);
     } else {
-      this.numberStack.push(result);
+      this.numberStack.push(actualResult);
     }
   }
 
