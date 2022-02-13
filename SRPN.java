@@ -30,7 +30,7 @@ public class SRPN {
   }
 
   public void processCommand(String command) {
-    String[] parsedCommands = Parser.parseCommand(command);
+    String[] parsedCommands = Parser.parseCommandForSpaces(command);
     distributeCommandsForExecution (parsedCommands);
   }
 
@@ -48,21 +48,38 @@ public class SRPN {
   }
 
   private void distributeOperationsAndOperandsCommands (String command) {
-    if (!this.utils.getCommentMode()) {
-      if (command.matches("-?[0-9]+")) {
-        executeOperandCommand(command);
-      } else if (this.arithmeticOperations.contains(command)) {
-        executeOperationCommand(command);
-      } else if (command.equals("=")) {
-        View.printNumberStackTop(this.numberStack);
-      } else if (command.equals("d")) {
-        View.printNumberStack(this.numberStack);
-      } else if (command.equals("r")) {
-        executeRandomCommand();
-      } else {
-        View.printErrorMessage("Unrecognised operator or operand \"" + command + "\".");
+    if (!this.utils.getCommentMode() && !handleCommandFlow(command)) {
+      handleComplexCommands(command);
+    }
+  }
+
+  private void handleComplexCommands (String complexCommand) {
+    String[] parsedCommands = Parser.parseComplexSingleLineCommand(complexCommand);
+    for (String parsedCommand : parsedCommands) {
+      if (!parsedCommand.equals("") && !handleCommandFlow(parsedCommand)) {
+        View.printErrorMessage("Unrecognised operator or operand \"" + parsedCommand + "\".");
       }
     }
+  }
+
+  private boolean handleCommandFlow (String command) {
+    if (command.matches("-?[0-9]+")) {
+      executeOperandCommand(command);
+      return true;
+    } else if (this.arithmeticOperations.contains(command)) {
+      executeOperationCommand(command);
+      return true;
+    } else if (command.equals("=")) {
+      View.printNumberStackTop(this.numberStack);
+      return true;
+    } else if (command.equals("d")) {
+      View.printNumberStack(this.numberStack);
+      return true;
+    } else if (command.equals("r")) {
+      executeRandomCommand();
+      return true;
+    }
+    return false;
   }
 
   private void executeOperandCommand (String operand) {
