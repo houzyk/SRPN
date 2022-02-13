@@ -11,6 +11,7 @@ public class SRPN {
 
   Stack<Integer> numberStack = new Stack<>(); // numbers to be operated on by operations n operationQueue
   Queue<String> operationQueue = new LinkedList<>(); // operations to be performed on numberStack
+  Queue<String> displayCommandsQueue = new LinkedList<>(); // operations to be performed on numberStack
   Integer firstOperand; // stores first operand
   Integer secondOperand; // stores second operand
 
@@ -44,14 +45,13 @@ public class SRPN {
         }
       }
     }
-    // calculate();
+    calculate();
+    executeDisplayCommands();
   }
 
   private void distributeOperationsAndOperandsCommands (String command) {
     if (!this.utils.getCommentMode() && !handleCommandFlow(command)) {
       handleComplexCommands(command);
-    } else {
-      calculate();
     }
   }
 
@@ -60,8 +60,6 @@ public class SRPN {
     for (String parsedCommand : parsedCommands) {
       if (!parsedCommand.equals("") && !handleCommandFlow(parsedCommand)) {
         View.printErrorMessage("Unrecognised operator or operand \"" + parsedCommand + "\".");
-      } else {
-        calculate();
       }
     }
   }
@@ -77,7 +75,7 @@ public class SRPN {
       View.printNumberStackTop(this.numberStack);
       return true;
     } else if (command.equals("d")) {
-      View.printNumberStack(this.numberStack);
+      this.displayCommandsQueue.add(command);
       return true;
     } else if (command.equals("r")) {
       executeRandomCommand();
@@ -100,6 +98,13 @@ public class SRPN {
     if (this.utils.checkOverflow(this.numberStack)) {
       this.numberStack.add(this.randomNumGenerator.generateRandomNumber());
     }
+  }
+
+  private void executeDisplayCommands () {
+    for (String command : this.displayCommandsQueue) {
+      if (command.equals("d")) View.printNumberStack(this.numberStack);
+    }
+    this.displayCommandsQueue.clear();
   }
 
   private void calculate () {
