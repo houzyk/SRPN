@@ -1,37 +1,27 @@
 import java.util.ArrayList;
 import java.util.Stack;
 
-/**
- * Class for utils and helpers used by the SRPN calculator.
- */
-
 public class Utils {
-  // arithmeticOperations is an array of all SRPN arithmetic operations
   private ArrayList<String> arithmeticOperations = new ArrayList<>();
-  // commentMode stores whether a comment is present, true upon '#' command
-  private boolean commentMode = false; // initially, the calculator is NOT in comment mode
+  private boolean commentMode = false;
 
-  // * constructor - executes when SRPN constructor is executed
-  public Utils () {
-    // fills arithmeticOperations array with all SRPN arithmetic operations
+  public Utils() {
     initArithmeticOperationsArray();
   }
 
-  // getter to obtain array of all arithmetic operations
   public ArrayList<String> getArithmeticOperations() {
     return this.arithmeticOperations;
   }
 
-  // getter to obtain commentmode
-  public boolean getCommentMode () {
+  public boolean getCommentMode() {
     return this.commentMode;
   }
 
-  // setter for comment mode. toggles comemnt mode on and off whenever a '#' is present
-  public void setCommentMode () { this.commentMode = !this.commentMode; }
+  public void setCommentMode() {
+    this.commentMode = !this.commentMode;
+  }
 
-  // adds each arithmetic operation to the arithmetic operations array
-  private void initArithmeticOperationsArray () {
+  private void initArithmeticOperationsArray() {
     this.arithmeticOperations.add("+");
     this.arithmeticOperations.add("-");
     this.arithmeticOperations.add("*");
@@ -40,18 +30,15 @@ public class Utils {
     this.arithmeticOperations.add("%");
   }
 
-  // check for saturation above 2147483647
   public boolean isPositivelySaturated(long calculation) {
     return calculation > Integer.MAX_VALUE;
   }
 
-  // checks for saturation below -2147483647
   public boolean isNegativelySaturated(long calculation) {
     return calculation < Integer.MIN_VALUE;
   }
 
-  // checks if the stack contains too little numbers
-  public boolean checkUnderFlow (Stack<Integer> numberStack) {
+  public boolean checkUnderFlow(Stack<Integer> numberStack) {
     if (numberStack.size() <= 1) {
       View.printErrorMessage("Stack underflow.");
       return false;
@@ -59,8 +46,7 @@ public class Utils {
     return true;
   }
 
-  // checks if the stack contains too many numbers
-  public boolean checkOverflow (Stack<Integer> numberStack) {
+  public boolean checkOverflow(Stack<Integer> numberStack) {
     if (numberStack.size() >= 23) {
       View.printErrorMessage("Stack overflow.");
       return false;
